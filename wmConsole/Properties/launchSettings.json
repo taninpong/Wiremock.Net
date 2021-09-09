@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "wmConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "--Urls http://localhost:9091 --WireMockLogger WireMockConsoleLogger"
+    }
+  }
+}
