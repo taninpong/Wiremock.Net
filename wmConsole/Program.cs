@@ -150,7 +150,16 @@ namespace wmConsole
                    .WithHeader("Access-Control-Allow-Origin", "*")
                    .WithBody(json).WithDelay(10).WithTransformer(true));
 
-
+            _server.Given(Request.Create().WithPath("/ExamStructure")
+               .UsingGet()//.UsingPost
+               .WithHeader()
+               .WithBody(""))
+               .RespondWith(Response.Create()
+               .WithHeader("")
+               .WithStatusCode("")
+               .WithBody("")
+               .WithDelay(10)
+               .WithTransformer(true));
 
             //.RespondWith(Response.Create().WithHeader("Content-Type", "application/json").WithBody(JsonSerializer.Serialize(data2.Name.Adapt("{{request.body}}"))
             //    ).WithTransformer(true));
