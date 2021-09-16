@@ -91,55 +91,30 @@ namespace wmConsole
                 AllowOnlyDefinedHttpStatusCodeInResponse = true,
             });
 
-            _server.Given(Request.Create().WithPath("/getJson")
+            //API Get
+            _server.Given(Request.Create()
+                .WithPath("/getapi")
                 .UsingGet()
-                .WithParam("name", new ExactMatcher("Pao"))
                 ).RespondWith(
                 Response.Create()
-                    .WithStatusCode(System.Net.HttpStatusCode.OK)
-                    .WithHeader("content-type", "application/json; charset=utf-8")
-                    .WithBody("{{request.query.name}}").WithTransformer()
-                );
+                .WithBody("Hello World!"));
 
-            _server.Given(Request.Create().WithPath("/getJson2/ncrt-home")
+            _server.Given(Request.Create().WithPath("/getqrystring")
+            .UsingGet()
+            .WithParam("name", new ExactMatcher("Joe"))
+            ).RespondWith(
+            Response.Create()
+            .WithStatusCode(System.Net.HttpStatusCode.OK)
+            .WithHeader("content-type", "application/json; charset=utf-8")
+            .WithBody("{{request.query.name}}").WithTransformer()
+            );
+
+            _server.Given(Request.Create().WithPath("/getStudent/*")
               .UsingGet()
               ).RespondWith(
               Response.Create()
-                  .WithHeader("Access-Control-Allow-Origin", "*")
-                  .WithHeader("content-type", "application/json; charset=utf-8")
-                  .WithStatusCode(System.Net.HttpStatusCode.OK)
-                  .WithBody(JsonSerializer.Serialize(new Studentmodel { Name = "{{request.PathSegments.[0]}}", Age = 1, Sex = "Male" }, options)).WithTransformer()
+                  .WithBody("{{request.PathSegments.[1]}}").WithTransformer()
               );
-
-            //var data = new Studentmodel() { Name = "Pao", Age = 1, Sex = "Male" };
-
-            _server.Given(Request.Create().WithPath("/createUser")
-                .UsingPost()
-                .WithHeader("Content-Type", "application/json; charset=utf-8")
-                .WithBody(new JsonPartialMatcher(
-                    JsonSerializer.Serialize(new { Name="Pao",Sex="Male"})
-                    , true))
-                )
-                .AtPriority(1)
-                .RespondWith(Response.Create().WithBody(
-              "Create Success!  {{request.bodyAsJson.Name}} {{request.bodyAsJson.Age}}  {{request.bodyAsJson.Sex}} {{request.body}}")
-                .WithDelay(10).WithTransformer(true));
-
-            //Rex
-            _server.Given(Request.Create().WithPath("/reg")
-                .UsingPost()
-                .WithBody(new RegexMatcher("H*"))
-              ).RespondWith(Response.Create().WithBody("Hello matched with RegexMatcher ").WithTransformer());
-
-
-            _server.Given(Request.Create().WithPath("/getInternalServerError")
-                .UsingGet()
-                ).RespondWith(
-                Response.Create()
-                    .WithHeader("Access-Control-Allow-Origin", "*")
-                    .WithStatusCode(System.Net.HttpStatusCode.InternalServerError).WithDelay(5000)
-                );
-
 
             StreamReader r = new StreamReader("F:/git/Wiremock.Net/wmConsole/json/json01.json");
             string json = r.ReadToEnd();
@@ -150,74 +125,27 @@ namespace wmConsole
                    .WithHeader("Access-Control-Allow-Origin", "*")
                    .WithBody(json).WithDelay(10).WithTransformer(true));
 
+            //API Post
+            _server.Given(Request.Create().WithPath("/CreateEmployee")
+                .UsingPost())
+                .RespondWith(Response.Create()
+                .WithBody("Create Success"));
+
+            _server.Given(Request.Create().WithPath("/CreateEmployeeByName")
+                .UsingPost()
+                .WithBody(new JsonPartialMatcher(
+                    JsonSerializer.Serialize(new { Name = "Joe" })
+                    , true)))
+                .RespondWith(Response.Create().WithBody(
+              "Create Success!").WithTransformer(true));
 
 
-            //.RespondWith(Response.Create().WithHeader("Content-Type", "application/json").WithBody(JsonSerializer.Serialize(data2.Name.Adapt("{{request.body}}"))
-            //    ).WithTransformer(true));
-
-
-            //.RespondWith(Response.Create().WithBody(
-            //        JsonSerializer.Serialize(
-
-            //    //data, options)).WithTransformer(true));
-            //    new Studentmodel
-            //    {
-            //        Name = "{{request.bodyAsJson.Name}}",
-            //        Age = "{{request.bodyAsJson.Age}}",
-            //        Sex = "{{request.bodyAsJson.Sex}}"
-            //    }, options)).WithTransformer(true));
-
-
-            //"Create Success!  {{request.bodyAsJson.name}} {{request.bodyAsJson.age}}  {{request.body}}").WithDelay(10).WithTransformer(true));
-
-            ///xxse
-
-            //_server.Given(Request.Create().WithPath("/add/*/*")
-            //  .UsingGet()
-            //  ).RespondWith(
-            //  Response.Create()
-            //      .WithHeader("Access-Control-Allow-Origin", "*")
-            //      .WithBody("{{request.PathSegments.[1]}} * {{request.PathSegments.[2]}}").WithTransformer()
-            //  );
-
-            //_server.Given(Request.Create().WithPath("/getEmployee")
-            // .UsingGet()
-            // .WithHeader("Content-Type", "application/json; charset=utf-8")
-            // ).RespondWith(Response.Create()
-            // .WithStatusCode(System.Net.HttpStatusCode.OK)
-            // .WithHeader("content-type", "application/json; charset=utf-8")
-            // .WithBody("{ " +
-            //           "\"employeeID\" : 12345," +
-            //           "\"employeeName\" : \"Preethi\"}")
-            // );
-
-
-            //_server.Given(Request.Create().WithPath("/getJson3/*")
-            //    .UsingGet()
-            //    ).RespondWith(
-            //    Response.Create()
-            //        .WithHeader("Access-Control-Allow-Origin", "*")
-            //        .WithBody("{" + "\"employeeID\" : \"{{request.PathSegments.[0]}}\"}").WithTransformer()
-            //    );
-
-
-
-            //_server.Given(Request.Create().WithPath("/kyc")
-            //   .UsingGet()
-            //   ).RespondWith(
-            //   Response.Create()
-            //       .WithHeader("Access-Control-Allow-Origin", "*")
-            //       .WithStatusCode(System.Net.HttpStatusCode.OK)
-            //       .WithBody(JsonSerializer.Serialize(new Kycmodel { FName = "", LName = ""}, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })).WithTransformer()
-            //   );
-
-            //_server.Given(Request.Create().WithPath("/getJson2/ncrt-123456")
-            //    .UsingGet()
-            //    ).RespondWith(
-            //    Response.Create()
-            //        .WithStatusCode(System.Net.HttpStatusCode.OK)
-            //        .WithBody(JsonSerializer.Serialize(new Studentmodel { Name = "hhh" }))
-            //    );
+            _server.Given(Request.Create().WithPath("/CreateStudent")
+                .UsingPost())
+                .RespondWith(Response.Create()
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(("Create Success {{request.bodyAsJson.name }}"))
+                .WithTransformer(true));
 
         }
 
