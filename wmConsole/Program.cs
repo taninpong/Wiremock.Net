@@ -115,8 +115,9 @@ namespace wmConsole
               Response.Create()
                   .WithBody("{{request.PathSegments.[1]}}").WithTransformer()
               );
-
-            StreamReader r = new StreamReader("F:/git/Wiremock.Net/wmConsole/json/json01.json");
+            
+            // TODO Set File Path
+            StreamReader r = new StreamReader("File Path");
             string json = r.ReadToEnd();
             _server.Given(Request.Create().WithPath("/GetDataInFile")
                .UsingGet()
