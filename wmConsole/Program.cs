@@ -104,8 +104,6 @@ namespace wmConsole
             .WithParam("name", new ExactMatcher("Joe"))
             ).RespondWith(
             Response.Create()
-            .WithStatusCode(System.Net.HttpStatusCode.OK)
-            .WithHeader("content-type", "application/json; charset=utf-8")
             .WithBody("{{request.query.name}}").WithTransformer()
             );
 
@@ -116,14 +114,15 @@ namespace wmConsole
                   .WithBody("{{request.PathSegments.[1]}}").WithTransformer()
               );
 
-            StreamReader r = new StreamReader("F:/git/Wiremock.Net/wmConsole/json/json01.json");
-            string json = r.ReadToEnd();
+
+            var datas = System.IO.File.ReadAllText("json/json01.json");
+
             _server.Given(Request.Create().WithPath("/GetDataInFile")
                .UsingGet()
                ).RespondWith(
                Response.Create()
                    .WithHeader("Access-Control-Allow-Origin", "*")
-                   .WithBody(json).WithDelay(10).WithTransformer(true));
+                   .WithBody(datas).WithDelay(10).WithTransformer(true));
 
             //API Post
             _server.Given(Request.Create().WithPath("/CreateEmployee")
